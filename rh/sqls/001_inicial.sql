@@ -1,11 +1,12 @@
 CREATE DATABASE rh COLLATE 'utf8_unicode_ci';
 
-CREATE TABLE `empregado` (
-  `id_empregado` int(11) NOT NULL,
-  `nome` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `senha` varchar(50) NOT NULL,
-  `status` bit(1) DEFAULT NULL
+CREATE TABLE `usuarios` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `tipo` enum('programador','chefe','RH') NOT NULL,
+  `situacao` enum('disponivel','convidado','aceite','contratado') DEFAULT 'disponivel'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
