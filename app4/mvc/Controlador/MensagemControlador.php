@@ -3,62 +3,30 @@ namespace Controlador;
 
 use \Framework\DW3Sessao;
 use \Modelo\Mensagem;
-use \Modelo\Usuario;
 
 class MensagemControlador extends Controlador
 {
-    private $id_usuario = null;
-    private function getProgramadores($acao)
+    private function calcularPaginacao()
     {
-        $id_usuario = DW3Sessao::get('usuario');
-        if ($acao == 3) {
-            $convite = Usuario::buscaPorId($id_usuario[0]);
-            return compact('convite');
-        }
-        $programadores = Mensagem::buscarProgramadores($acao);
-        return compact('programadores');
+        $pagina = array_key_exists('p', $_GET) ? intval($_GET['p']) : 1;
+        $limit = 4;
+        $offset = ($pagina - 1) * $limit;
+        $mensagens = Mensagem::buscarTodos($limit, $offset);
+        $ultimaPagina = ceil(Mensagem::contarTodos() / $limit);
+        return compact('pagina', 'mensagens', 'ultimaPagina');
     }
 
     public function index()
     {
         $this->verificarLogado();
-        $id_usuario = DW3Sessao::get('usuario');
-        
-        switch ($id_usuario[1]) {
-            case 'chefe':
-                $conteudo = $this->getProgramadores(1);
-
-                $this->visao('chefe/index.php',  
-                [
-                    'programadores' => $conteudo['programadores'],
-                    'mensagemFlash' => DW3Sessao::getFlash('mensagemFlash')
-                ]);        
-                break;
-            case 'RH':
-                $conteudo = $this->getProgramadores(2);
-
-                $this->visao('rh/index.php',  
-                [
-                    'programadores' => $conteudo['programadores'],
-                    'mensagemFlash' => DW3Sessao::getFlash('mensagemFlash')
-                ]);        
-                break;
-            default:
-                $conteudo = $this->getProgramadores(3);
-
-
-                $this->visao('programador/index.php',  
-                [
-                    'objeto' => $conteudo['objeto'],
-                    'mensagemFlash' => DW3Sessao::getFlash('mensagemFlash')
-                ]);        
-                break;
-        }
-        
-       
+        $paginacao = $this->calcularPaginacao();
+        $this->visao('mensagens/index.php', [
+            'mensagens' => $paginacao['mensagens'],
+            'pagina' => $paginacao['pagina'],
+            'ultimaPagina' => $paginacao['ultimaPagina'],
+            'mensagemFlash' => DW3Sessao::getFlash('mensagemFlash')
+        ]);
     }
-
-
 
     public function armazenar()
     {

@@ -14,19 +14,13 @@ class LoginControlador extends Controlador
     public function armazenar()
     {
         $usuario = Usuario::buscarEmail($_POST['email']);
-
-       
         if ($usuario && $usuario->verificarSenha($_POST['senha'])) {
-            DW3Sessao::set('usuario', [$usuario->getId() , $usuario->getTipo(),  $usuario->getSituacao()]);
-
-            $tipo = DW3Sessao::get('usuario')[1];
-            if ($tipo == 'chefe' || $tipo == 'RH' || $tipo == 'programador') {
-
-                
-                $this->redirecionar(URL_RAIZ . 'home');
+            DW3Sessao::set('usuario', $usuario->getId());
+            if (DW3Sessao::get('usuario', $usuario->getId()) == 1) {
+                $this->redirecionar(URL_RAIZ . 'login');
 
             }
-            $this->redirecionar(URL_RAIZ . 'login');
+            $this->redirecionar(URL_RAIZ . 'mensagens');
         } else {
             $this->setErros(['login' => 'Usuário ou senha inválido.']);
             $this->visao('login/criar.php');

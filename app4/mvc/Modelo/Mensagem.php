@@ -3,13 +3,11 @@ namespace Modelo;
 
 use \PDO;
 use \Framework\DW3BancoDeDados;
-use \Framework\DW3Sessao;
-
 
 class Mensagem extends Modelo
 {
-    const BUSCAR_TODOS = 'SELECT * FROM usuarios WHERE tipo = "programador" AND situacao = "disponivel" OR situacao = "convidado"';
-    const BUSCAR_ID = 'SELECT * FROM usuarios WHERE id = ? LIMIT 1';
+    const BUSCAR_TODOS = 'SELECT m.texto, m.id m_id, u.id u_id, u.email FROM mensagens m JOIN usuarios u ON (m.usuario_id = u.id) ORDER BY m.id LIMIT ? OFFSET ?';
+    const BUSCAR_ID = 'SELECT * FROM mensagens WHERE id = ? LIMIT 1';
     const INSERIR = 'INSERT INTO mensagens(usuario_id,texto) VALUES (?, ?)';
     const DELETAR = 'DELETE FROM mensagens WHERE id = ?';
     const CONTAR_TODOS = 'SELECT count(id) FROM mensagens';
@@ -66,7 +64,7 @@ class Mensagem extends Modelo
         DW3BancoDeDados::getPdo()->commit();
     }
 
-    public static function buscarConvites($id)
+    public static function buscarId($id)
     {
         $comando = DW3BancoDeDados::prepare(self::BUSCAR_ID);
         $comando->bindValue(1, $id, PDO::PARAM_INT);
@@ -74,16 +72,13 @@ class Mensagem extends Modelo
         $objeto = null;
         $registro = $comando->fetch();
         if ($registro) {
-            $objeto =  new Usuario(
-                $registro['nome'],
-                $registro['email'],
-                '',
-                $registro['tipo'],
-                $registro['id'],
-                $registro['situacao']
+            $objeto = new Mensagem(
+                $registro['usuario_id'],
+                $registro['texto'],
+                null,
+                $registro['id']
             );
         }
-        
         return $objeto;
     }
 
@@ -92,39 +87,28 @@ class Mensagem extends Modelo
     resolver o problema: query N+1. Com apenas uma consulta no banco
     eu busco tudo que eu preciso.
     */
-    public static function buscarProgramadores($acao)
+    public static function buscarTodos($limit = 4, $offset = 0)
     {
-        $registros = null;
+        $comando = DW3BancoDeDados::prepare(self::BUSCAR_TODOS);
+        $comando->bindValue(1, $limit, PDO::PARAM_INT);
+        $comando->bindValue(2, $offset, PDO::PARAM_INT);
+        $comando->execute();
+        $registros = $comando->fetchAll();
         $objetos = [];
-        $objeto = null;
-
-        switch ($acao) {
-            case 1:
-                $comando = DW3BancoDeDados::query(self::BUSCAR_TODOS);
-                $registros = $comando->fetchAll();
-                break;
-            case 2:
-                $comando = DW3BancoDeDados::query(self::BUSCAR_CONVIDADOS);
-                $registros = $comando->fetchAll();
-                break;
-            default:
-                break;
-        }
-        
         foreach ($registros as $registro) {
-            
-            $objetos[] = new Usuario(
-                $registro['nome'],
+            $usuario = new Usuario(
                 $registro['email'],
                 '',
-                $registro['tipo'],
-                $registro['id'],
-                $registro['situacao']
+                null,
+                $registro['u_id']
             );
-
+            $objetos[] = new Mensagem(
+                $registro['u_id'],
+                $registro['texto'],
+                $usuario,
+                $registro['m_id']
+            );
         }
-
-
         return $objetos;
     }
 

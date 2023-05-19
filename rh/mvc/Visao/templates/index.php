@@ -16,7 +16,7 @@
 
 
     <!-- CSS only -->
-    <link rel="stylesheet" href="assets/styles/css.css">
+    <link rel="stylesheet" href="<?= URL_CSS . 'geral.css' ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
@@ -39,7 +39,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <a id="title" class="navbar-brand" href="<?= URL_RAIZ  ?>">RH++</a>
+                <a id="title" class="navbar-brand" href="<?= URL_RAIZ . 'home' ?>">RH++</a>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page"></a>
@@ -48,8 +48,12 @@
                 <!--<a href="/app/pages/perfil/perfil.html">
                     <i class="bi bi-file-person"></i>
                 </a>-->
-                <i type="button" data-bs-toggle="modal" data-bs-target="#login" class="bi bi-box-arrow-in-right"></i>
-
+                
+                <form action="<?= URL_RAIZ . 'login' ?>" method="post">
+                    <input type="hidden" data-bs-toggle="modal" data-bs-target="#login" class="bi bi-box-arrow-in-right" name="_metodo" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Sair</button>
+                </form>
+                
             </div>
         </div>
     </nav>

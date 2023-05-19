@@ -9,31 +9,36 @@ class Usuario extends Modelo
 {
     const BUSCAR_POR_EMAIL = 'SELECT * FROM usuarios WHERE email = ? LIMIT 1';
     const BUSCAR_POR_ID = 'SELECT * FROM usuarios WHERE id = ? LIMIT 1';
-    const INSERIR = 'INSERT INTO usuarios(nome, email, senha) VALUES (?, ?, ?)';
+    const INSERIR = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
+    const UPDATE_CONVITE = 'UPDATE `usuarios` SET  `situacao`= ? WHERE id = ?';
+
     private $id;
     private $email;
     private $nome;
     private $senha;
     private $senhaPlana;
     private $tipo;
+    private $situacao;
 
-    public function __construct(
-        $nome,
-        $email,
-        $senhaPlana,
-        $tipo = null,
-        $id = null
-    ) {
+    public function __construct(    $nome,        $email,        $senhaPlana,        $tipo,        $id = null,        $situacao    ) {
         $this->id = $id;
         $this->email = $email;
         $this->nome = $nome;
         $this->senhaPlana = $senhaPlana;
+        $this->tipo = $tipo;
+        $this->situacao = $situacao;
 
         if ($senhaPlana != null) {
 
             $this->senha = password_hash($senhaPlana, PASSWORD_BCRYPT);
             echo $this->senha;
         }
+
+        
+    }
+
+    public function getNome() {
+        return $this->nome;
     }
 
     public function getId()
@@ -48,6 +53,10 @@ class Usuario extends Modelo
 
     public function getTipo() {
         return $this->tipo;
+    }
+
+    public function getSituacao() {
+        return $this->situacao;
     }
 
     public function verificarSenha($senhaPlana)
@@ -93,10 +102,15 @@ class Usuario extends Modelo
             $objeto = new Usuario(
                 $registro['nome'],
                 $registro['email'],
-                ''
+                '',
+                $registro['tipo'],
+                $registro['id'],
+                $registro['situacao']
             );
-            $tipo = $registro['tipo'];
+            $objeto->tipo = $registro['tipo'];
+            $objeto->situacao = $registro['situacao'];
             $objeto->senha = $registro['senha'];
+            
         }
 
         return $objeto;
@@ -113,12 +127,29 @@ class Usuario extends Modelo
             $objeto = new Usuario(
                 $registro['nome'],
                 $registro['email'],
-                ''
+                '',
+                $registro['tipo'],
+                $registro['id'],
+                $registro['situacao']
             );
-            $objeto = $registro['tipo'];
+            $objeto->tipo = $registro['tipo'];
+            $objeto->situacao = $registro['situacao'];
             $objeto->senha = $registro['senha'];
         }
-
+        
         return $objeto;
+    }
+
+    public static function updateSituacao($id_programador, $situacao) 
+    {
+
+        DW3BancoDeDados::getPdo()->beginTransaction();
+        $comando = DW3BancoDeDados::prepare(self::UPDATE_CONVITE);
+        $comando->bindValue(2, $id_programador, PDO::PARAM_STR);
+        $comando->bindValue(1, $situacao, PDO::PARAM_STR);
+        $comando->execute();
+        //$this->id = DW3BancoDeDados::getPdo()->lastInsertId();
+        DW3BancoDeDados::getPdo()->commit();
+
     }
 }

@@ -18,17 +18,11 @@ $rotas = [
     '/usuarios/sucesso' => [
         'GET' => '\Controlador\UsuarioControlador#sucesso',
     ],
-    '/home' => [
+    '/mensagens' => [
         'GET' => '\Controlador\MensagemControlador#index',
         'POST' => '\Controlador\MensagemControlador#armazenar',
     ],
-    
-    '/acaoUsuario/?' => [
-        'POST' => '\controlador\UsuarioControlador#mudarSituacao'
-    ],
-
     '/mensagens/?' => [
         'DELETE' => '\Controlador\MensagemControlador#destruir',
     ],
-
 ];
