@@ -18,22 +18,23 @@
 
     <?php foreach ($programadores as $programador) : ?>
         
-        <form action="<?= URL_RAIZ . 'acaoUsuario/' .  $programador->getId();?>" method="post">
-
-
+        
+        
         <div class="col">
             <div class="card" style="width: 20rem;">
                 <div class="card-body">
                     <h5 class="card-title"><?= $programador->getNome();?></h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">Status: <?= $programador->getSituacao();?></h6>
                     <h6 class="card-subtitle mb-2 text-body-secondary">Ocupação: <?= $programador->getTipo();?></h6>
-                   
-                    <hr>
-
-                    <span>
                     
-                        <?php if ($programador->getSituacao() == 'convidado'): ?>
-                            <input name="acao" type="submit" class="btn btn-success" value="Contratar">
+                    <hr>
+                    
+                    <span>
+                        
+                        <?php if ($programador->getSituacao() == 'aceite'): ?>
+                            <form action="<?= URL_RAIZ . 'Rh/' .  $programador->getId() . '/contratar'?>" method="post">
+                                <input name="acao" type="submit" class="btn btn-success" value="Contratar">
+                            </form>
                         <?php endif; ?>
 
                     </span>
@@ -42,7 +43,6 @@
             </div>
         </div>
 
-        </form>
         
     <?php endforeach ?>
 

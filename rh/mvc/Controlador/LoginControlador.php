@@ -17,15 +17,23 @@ class LoginControlador extends Controlador
 
        
         if ($usuario && $usuario->verificarSenha($_POST['senha'])) {
-            DW3Sessao::set('usuario', [$usuario->getId() , $usuario->getTipo(),  $usuario->getSituacao()]);
 
-            $tipo = DW3Sessao::get('usuario')[1];
-            if ($tipo == 'chefe' || $tipo == 'RH' || $tipo == 'programador') {
+            DW3Sessao::set('usuario-id', $usuario->getId());
 
+            $id_usuario = DW3Sessao::get('usuario-id');
+
+            if ($id_usuario == 1) {
                 
-                $this->redirecionar(URL_RAIZ . 'home');
+                $this->redirecionar(URL_RAIZ . 'chefe/listaConvite');
 
+            } else if ($id_usuario == 2) {
+
+                $this->redirecionar(URL_RAIZ . 'Rh/listaContratacao');
+
+            } else if ($id_usuario > 2) {
+                $this->redirecionar(URL_RAIZ . 'programador/perfil');
             }
+            
             $this->redirecionar(URL_RAIZ . 'login');
         } else {
             $this->setErros(['login' => 'Usuário ou senha inválido.']);

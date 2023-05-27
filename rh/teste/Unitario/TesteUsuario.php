@@ -9,7 +9,9 @@ class TesteUsuario extends Teste
 {
 	public function testeInserir()
 	{
-        $usuario = new Usuario('email-teste', 'senha');
+        new Usuario('nome', 'email', 'senha', null, null, null);
+
+        $usuario = new Usuario('nome', 'email-teste', 'senha', null, null, null);
         $usuario->salvar();
         $query = DW3BancoDeDados::query("SELECT * FROM usuarios WHERE email = 'email-teste'");
         $bdUsuairo = $query->fetch();
@@ -18,7 +20,7 @@ class TesteUsuario extends Teste
 
     public function testeBuscarEmail()
     {
-        $usuario = new Usuario('email-teste', 'senha');
+        $usuario = new Usuario('nome', 'email-teste', 'senha', null, null, null);
         $usuario->salvar();
         $usuario = Usuario::buscarEmail('email-teste');
         $this->verificar($usuario !== false);

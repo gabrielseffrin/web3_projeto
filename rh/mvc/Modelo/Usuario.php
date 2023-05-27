@@ -8,7 +8,7 @@ use \Framework\DW3ImagemUpload;
 class Usuario extends Modelo
 {
     const BUSCAR_POR_EMAIL = 'SELECT * FROM usuarios WHERE email = ? LIMIT 1';
-    const BUSCAR_POR_ID = 'SELECT * FROM usuarios WHERE id = ? LIMIT 1';
+    const BUSCAR_POR_ID = 'SELECT * FROM usuarios WHERE id = ? AND situacao = "convidado"';
     const INSERIR = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
     const UPDATE_CONVITE = 'UPDATE `usuarios` SET  `situacao`= ? WHERE id = ?';
 
@@ -117,7 +117,8 @@ class Usuario extends Modelo
     }
 
     public static function buscaPorId($id)
-    {
+    {  
+
         $comando = DW3BancoDeDados::prepare(self::BUSCAR_POR_ID);
         $comando->bindValue(1, $id, PDO::PARAM_STR);
         $comando->execute();
@@ -132,11 +133,9 @@ class Usuario extends Modelo
                 $registro['id'],
                 $registro['situacao']
             );
-            $objeto->tipo = $registro['tipo'];
-            $objeto->situacao = $registro['situacao'];
-            $objeto->senha = $registro['senha'];
+            
         }
-        
+   
         return $objeto;
     }
 

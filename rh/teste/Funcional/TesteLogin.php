@@ -15,30 +15,30 @@ class TesteLogin extends Teste
 
     public function testeLogin()
     {
-        (new Usuario('joao@teste.com', '123'))->salvar();
+        (new Usuario('Fulano', 'fulano@teste.com', '123', null, null, null))->salvar();
         $resposta = $this->post(URL_RAIZ . 'login', [
-            'email' => 'joao@teste.com',
+            'email' => 'fulano@teste.com',
             'senha' => '123'
         ]);
-        $this->verificarRedirecionar($resposta, URL_RAIZ . 'mensagens');
+        $this->verificarRedirecionar($resposta, URL_RAIZ . 'programador/perfil');
         $this->verificar(DW3Sessao::get('usuario') != null);
     }
 
     public function testeLoginInvalido()
     {
         $resposta = $this->post(URL_RAIZ . 'login', [
-            'email' => 'joao@teste.com',
+            'email' => 'fulano@teste.com',
             'senha' => '123'
         ]);
-        $this->verificarContem($resposta, 'joao@teste.com');
+        $this->verificarContem($resposta, 'fulano@teste.com');
         $this->verificar(DW3Sessao::get('usuario') == null);
     }
 
     public function testeDeslogar()
     {
-        (new Usuario('joao@teste.com', '123'))->salvar();
+        (new Usuario('fulano@teste.com', '123'))->salvar();
         $resposta = $this->post(URL_RAIZ . 'login', [
-            'email' => 'joao@teste.com',
+            'email' => 'fulano@teste.com',
             'senha' => '123'
         ]);
         $resposta = $this->delete(URL_RAIZ . 'login');

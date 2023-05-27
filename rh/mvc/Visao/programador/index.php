@@ -16,37 +16,39 @@
 
 
 
-    <?php foreach ($objeto as $programador) : ?>
+    
         
-        <form action="<?= URL_RAIZ . 'acaoUsuario/' .  $programador->getId();?>" method="post">
+    
+    
+    <?php if ($objeto && $objeto->getSituacao() == 'convidado'): ?>
+    <div class="col">
+        <div class="card" style="width: 20rem;">
+            <div class="card-body">
 
-
-        <div class="col">
-            <div class="card" style="width: 20rem;">
-                <div class="card-body">
-                    <h5 class="card-title"><?= $programador->getNome();?></h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">Status: <?= $programador->getSituacao();?></h6>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">Ocupação: <?= $programador->getTipo();?></h6>
-                   
-                    <hr>
-
-                    <span>
+                    <h5 class="card-title"><?= $objeto->getNome();?></h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Status: <?= $objeto->getSituacao();?></h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Ocupação: <?= $objeto->getTipo();?></h6>
                     
-                        <?php if ($programador->getSituacao() == 'disponivel'): ?>
-                            <input name="acao" type="submit" class="btn btn-success" value="Convidar">
-                            <?php elseif ($programador->getSituacao() == 'convidado'): ?>
-                            <input  name="acao" type="submit" class="btn btn-danger" value="Remover Convite">
-                        <?php endif; ?>
+                    <hr>
+                    
+                    <span>
                         
-                    </span>
-
+                            <form action="<?= URL_RAIZ . 'programador/' . $objeto->getId() .'/aceitar'?>" method="post">
+                                <input name="acao" type="submit" class="btn btn-success" value="Aceitar">
+                            </form>
+                            <form action="<?= URL_RAIZ . 'programador/' . $objeto->getId() .'/recusar'?>" method="post">
+                                <input  name="acao" type="submit" class="btn btn-danger" value="Recusar">
+                            </form>
+                            
+                        </span>
+                        
+                    </div>
                 </div>
             </div>
-        </div>
+            <?php endif ?>
 
-        </form>
         
-    <?php endforeach ?>
+    
 
 </div>
 
