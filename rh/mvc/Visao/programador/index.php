@@ -1,6 +1,6 @@
 <div class="container chefe">
     
-<h2>Programadores para Invite</h2>
+<h2>Convites</h2>
 
     <?php if ($mensagemFlash) : ?>
         <div class="alert alert-success alert-dismissible">

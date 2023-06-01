@@ -10,7 +10,8 @@ class TesteUsuarios extends Teste
     public function testeCriar()
     {
         $resposta = $this->get(URL_RAIZ . 'usuarios/criar');
-        $this->verificarContem($resposta, 'Cadastre-se');
+
+        $this->verificarContem($resposta, 'Sign up now');
     }
 
     public function testeArmazenar()
@@ -18,6 +19,10 @@ class TesteUsuarios extends Teste
         $resposta = $this->post(URL_RAIZ . 'usuarios', [
             'email' => 'mario@teste.com',
             'senha' => '123',
+            'nome'  => 'nome',
+            'situacao'      => '',
+            'id'    => null,
+            'tipo'  => ''
         ]);
         $this->verificarRedirecionar($resposta, URL_RAIZ . 'usuarios/sucesso');
         $resposta = $this->get(URL_RAIZ . 'usuarios/sucesso');

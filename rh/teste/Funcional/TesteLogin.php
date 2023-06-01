@@ -15,13 +15,13 @@ class TesteLogin extends Teste
 
     public function testeLogin()
     {
-        (new Usuario('Fulano', 'fulano@teste.com', '123', null, null, null))->salvar();
+        (new Usuario('fulano', 'fulano@teste.com', '123', null, null, null))->salvar();
         $resposta = $this->post(URL_RAIZ . 'login', [
             'email' => 'fulano@teste.com',
             'senha' => '123'
         ]);
         $this->verificarRedirecionar($resposta, URL_RAIZ . 'programador/perfil');
-        $this->verificar(DW3Sessao::get('usuario') != null);
+        $this->verificar(DW3Sessao::get('usuario-id') != null);
     }
 
     public function testeLoginInvalido()
@@ -30,19 +30,19 @@ class TesteLogin extends Teste
             'email' => 'fulano@teste.com',
             'senha' => '123'
         ]);
-        $this->verificarContem($resposta, 'fulano@teste.com');
-        $this->verificar(DW3Sessao::get('usuario') == null);
+        $this->verificarContem($resposta, 'Usuário ou senha inválido');
+        $this->verificar(DW3Sessao::get('usuario-id') == null);
     }
 
     public function testeDeslogar()
     {
-        (new Usuario('fulano@teste.com', '123'))->salvar();
+        (new Usuario('fulano', 'fulano@teste.com', '123', null, null, null))->salvar();
         $resposta = $this->post(URL_RAIZ . 'login', [
             'email' => 'fulano@teste.com',
             'senha' => '123'
         ]);
         $resposta = $this->delete(URL_RAIZ . 'login');
         $this->verificarRedirecionar($resposta, URL_RAIZ . 'login');
-        $this->verificar(DW3Sessao::get('usuario') == null);
+        $this->verificar(DW3Sessao::get('usuario-id') == null);
     }
 }

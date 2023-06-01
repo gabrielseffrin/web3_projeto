@@ -31,7 +31,6 @@ class Usuario extends Modelo
         if ($senhaPlana != null) {
 
             $this->senha = password_hash($senhaPlana, PASSWORD_BCRYPT);
-            echo $this->senha;
         }
 
         
